@@ -5,8 +5,8 @@ IPAddress ip(192, 168, 1, 100);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
-char ssid[] = "Acet2";
-char pass[]= "ankara06";
+char ssid[] = "YourSSID";
+char pass[]= "WiFiPassword";
 
 WiFiServer server(80);
 
