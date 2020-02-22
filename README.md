@@ -18,11 +18,17 @@ Components:
 Since I couldn't find a propper online circut schematic draw service, I will try to tell the connections here.
 
 ESP8266-01   to   Arduino UNO
+
 VCC  ---------------- 3.3 V Output
+
 GND  ----------------  GND
+
 EN   ----------------  3.3 V Output
+
 RX   ---------------- TX
+
 TX   ---------------- RX
+
 
 L298N      to     Arduino UNO
 5V   ----------------   5V
