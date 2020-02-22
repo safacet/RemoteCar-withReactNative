@@ -32,13 +32,21 @@ TX   ---------------- RX
 
 L298N      to     Arduino UNO
 5V   ----------------   5V
+
 GND  ----------------   GND
+
 IN1 ------------------  8
+
 IN2 ------------------  6
+
 IN3 ------------------  5
+
 IN4 ------------------  7
+
 ENA ------------------ 10
+
 ENB ------------------ 9
+
 
 L298N can control two motors but I connect every output with two motors so this way I could managed to conrol 4 motors. I 
 think you should use at least 12V of supply in case of the situations thah can appear from tha lack of power.
