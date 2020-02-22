@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  StatusBar,
+} from 'react-native';
 import { Accelerometer } from 'expo-sensors';
-
 
 
 export default class App extends Component {
@@ -12,40 +17,87 @@ export default class App extends Component {
       y: 0,
       z: 0,
     };
+
   }
+
+  connect = () => {
+    ws = new WebSocket('ws://192.168.1.100:81');
+
+    ws.onopen = () => {
+      // connection opened
+      ws.send("!")
+    };
+
+    ws.onmessage = (e) => {
+      // a message was received
+      console.log("message", e.data);
+    };
+
+    ws.onerror = (e) => {
+      // an error occurred
+      console.log("error", e);
+    };
+
+    ws.onclose = (e) => {
+      // connection closed
+      console.log("close", e);
+    };
+  }
+
+  disconnect = () => {
+    ws = null;
+  }
+
 
   componentDidMount() {
-     
-      Accelerometer.setUpdateInterval(100)
-      this.subscription = Accelerometer.addListener( data => {
-        this.setState({ x: data.x, y: data.y, z: data.z })
-      });
-      this.ws = new WebSocket('wss://echo.websocket.org');
-      this.ws.onmessage = (e) => {
-        this.ws.send('HTTP GET Request 300')
-        console.log('onmessage', e)
-      }
-      this.ws.onerror = (e) => {
-        console.log('error',e)
-      }
-      this.ws.onmessage = (e) => {
-        console.log(e)
-      }
+
+
+    Accelerometer.setUpdateInterval(120)
+    this.subscription = Accelerometer.addListener(data => {
+      this.setState({ x: data.x, y: data.y, z: data.z });
+      try {
+        this.dats = round(data.y) + '/' + round(data.x) + '?!';
+        ws.send(this.dats);
+      } catch {} 
+    });
   }
 
-  
-  
-  
-  
+
+
+
+
 
   render() {
     return (
-      <View style={styles.sensor}>
-        <Text style={styles.text}>Accelerometer: (in Gs where 1 G = 9.81 m s^-2)</Text>
+      <View style = {styles.mainContainer}>
+        <StatusBar hidden = {false} barStyle = "default" />
+      
+      <View style={styles.sensor} >
+        <Text style={styles.text}>Accelerometer:</Text>
         <Text style={styles.text}>
           x: {round(this.state.x)} y: {round(this.state.y)}
-      </Text>
+        </Text>
       </View>
+
+      <View style={styles.buttonContainer} >
+        <TouchableOpacity style = {styles.button}
+         onPress={this.connect} 
+         >
+          
+            <Text>CONNECT</Text>
+          
+        </TouchableOpacity>
+
+        <TouchableOpacity style = {styles.button}
+        
+        onPress = {this.disconnect} >
+            <Text> DISCONNECT </Text>
+        </TouchableOpacity>
+      </View>
+      </View>
+        
+      
+
     );
   }
 }
@@ -63,14 +115,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: 25,
+    height: 50,
+    marginHorizontal:25,
   },
   button: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#eee',
-    padding: 10,
+    backgroundColor: '#eee'
   },
   middleButton: {
     borderLeftWidth: 1,
@@ -84,4 +137,8 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
   },
+  mainContainer: {
+    flexDirection: 'column',
+    marginTop:100,
+  }
 });
